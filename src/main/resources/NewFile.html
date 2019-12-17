@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<script
+	src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script>
+	$(document).ready(function() {
+		$("button").click(function() {
+			$('#div1').html("div content");
+			$.post("http://localhost:8086/estimateDetails", {
+				
+				"estimateCode": "1570693966158"
+				
+			}, function(data, status) {
+				alert("Data: " + data + "\nStatus: " + status);
+				$('#div1').html("dasfasdf");
+			});
+		});
+	});
+</script>
+</head>
+<body>
+	<button>Send an HTTP POST request to a page and get the result
+		back</button>
+	<div id="div1">aa</div>
+
+</body>
+</html>
