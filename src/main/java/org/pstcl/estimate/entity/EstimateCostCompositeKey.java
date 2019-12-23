@@ -8,6 +8,8 @@ import javax.persistence.ManyToOne;
 
 import org.hibernate.annotations.Cascade;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import lombok.Data;
 
 @Data
@@ -26,6 +28,7 @@ public class EstimateCostCompositeKey  implements Serializable {
 
 	private Integer mid;
 
+	@JsonIgnore
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
@@ -61,6 +64,7 @@ public class EstimateCostCompositeKey  implements Serializable {
 		return result;
 	}
 
+	@JsonIgnore
 	@Override
 	public String toString() {
 		return "EstimateCostCompositeKey [estimate=" + estimate.getEstimateCode() + ", mid=" + mid + "]";

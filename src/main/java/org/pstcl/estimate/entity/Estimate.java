@@ -28,7 +28,7 @@ import lombok.Data;
 @Data
 @Entity
 @Table(name="estimate_master")
-public class Estimate implements Serializable {
+public class Estimate implements Comparable<Estimate>,Serializable {
 	private static final long serialVersionUID = 1L;
 
 	private String approved;
@@ -44,7 +44,7 @@ public class Estimate implements Serializable {
 	//@DateTimeFormat(iso = ISO.DATE_TIME)
 	//@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
 	private LocalDateTime dtUpdated;
-	
+
 	private String empid;
 
 	@Column(name="ENTRY_SOURCE")
@@ -58,7 +58,7 @@ public class Estimate implements Serializable {
 	@Column(name="estimate_code")
 	private String estimateCode;
 
-	
+
 	@JsonIgnore
 	@OneToMany(mappedBy="id.estimate", fetch=FetchType.EAGER,cascade = CascadeType.ALL)
 	private Set<EstimateCostDetail> estimateCostDetails;
@@ -77,9 +77,13 @@ public class Estimate implements Serializable {
 	private String estimateSanct;
 
 	@Column(name="ESTIMATE_SANCTION_DATE")
-	//@DateTimeFormat(iso = ISO.DATE_TIME)
-	//@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
 	private LocalDateTime estimateSanctionDate;
+
+
+
+	@Column(name="ESTIMATE_SANCTION_DATE_OLD")
+	private String estimateSanctionDateOld;
+
 
 	@Column(name="ESTIMATE_TYPE")
 	private String estimateType;
@@ -108,14 +112,15 @@ public class Estimate implements Serializable {
 	private String schCode;
 
 	private String userid;
-	
-	
+
+
 	//bi-directional many-to-one association to WorkMaster
 	@ManyToOne
 	@JoinColumn(name="WORK_CODE", referencedColumnName="WORK_CODE")
 	private Work workMaster;
 
 
+	@JsonIgnore
 	@Override
 	public String toString() {
 		return "Estimate [approved=" + approved + ", dtEntry=" + dtEntry + ", estimateCode=" + estimateCode
@@ -127,8 +132,28 @@ public class Estimate implements Serializable {
 				+ ", schCode=" + schCode + ", userid=" + userid + ", workMaster=" + workMaster + "]";
 	}
 
-	
-	
-	
+
+	@JsonIgnore
+	@Override
+	public int compareTo(Estimate o) {
+		int result=0;
+		if(null==this.dtUpdated)
+		{
+			result=-1;
+		}
+		else if(null==o.dtUpdated)
+		{
+			result=1;
+		}
+		else
+		{
+			result=this.dtUpdated.compareTo(o.dtUpdated);
+		}
+		return result;
+	}
+
+
+
+
 
 }

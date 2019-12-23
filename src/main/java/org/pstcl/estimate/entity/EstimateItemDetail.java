@@ -20,30 +20,37 @@ import lombok.Data;
 public class EstimateItemDetail implements Serializable {
 	private static final long serialVersionUID = 1L;
 
-	@Column(name="cost_type")
-	private String costType;
+	public EstimateItemDetail()
+	{
+		super();
+		this.id=new EstimateItemCompositeKey();
+	}
 	
 	 
-	@Column(name="goods_cond")
-	private String goodsCond;
-	
-	
-
-
-
-	
 	@EmbeddedId
 	@lombok.experimental.Delegate
 	private EstimateItemCompositeKey id;
+	
+	
 
-	@Column(name="item_type")
-	private String itemType;
+
+
+	
+	@Column(name="cost_type")
+	private String costType;
+
+
+	@Column(name="goods_cond")
+	private String goodsCond;
+
+	@Column(name="item_code")
+	private String itemCode;
 
 	@Column(name="item_name")
 	private String itemName;
 
-	private String qty;
 
+	private String qty;
 
 	@Column(name="total_amt")
 	private String totalAmt;
@@ -52,11 +59,5 @@ public class EstimateItemDetail implements Serializable {
 
 	@Column(name="unit_price")
 	private String unitPrice;
-
-	public EstimateItemDetail()
-	{
-		super();
-		this.id=new EstimateItemCompositeKey();
-	}
 
 }

@@ -14,6 +14,8 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import lombok.Data;
 
 
@@ -27,6 +29,10 @@ import lombok.Data;
 public class Work implements Serializable {
 	private static final long serialVersionUID = 1L;
 	
+	@Id
+	@Column(name="WORK_CODE")
+	private Integer workCode;
+
 	@Column(name="AMENDMENT_DATE")
 	private String amendmentDate;
 
@@ -45,6 +51,7 @@ public class Work implements Serializable {
 	private String empid;
 
 	//bi-directional many-to-one association to EstimateMaster
+	@JsonIgnore
 	@OneToMany(mappedBy="workMaster", fetch=FetchType.EAGER)
 	private List<Estimate> estimateMasters;
 
@@ -57,10 +64,6 @@ public class Work implements Serializable {
 
 	@Column(name="VOLTAGE_LEVEL")
 	private String voltageLevel;
-
-	@Id
-	@Column(name="WORK_CODE")
-	private Integer workCode;
 
 	@Column(name="WORK_DESC")
 	private String workDesc;

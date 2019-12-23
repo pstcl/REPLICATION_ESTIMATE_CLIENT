@@ -18,10 +18,12 @@ import org.apache.http.HttpHeaders;
 import org.pstcl.estimate.entity.Estimate;
 import org.pstcl.estimate.entity.EstimateCostDetail;
 import org.pstcl.estimate.entity.EstimateItemDetail;
+import org.pstcl.estimate.entity.Work;
 import org.pstcl.estimate.model.EstimateDetailsModel;
 import org.pstcl.estimate.model.EstimateModel;
 import org.pstcl.estimate.repository.EstimateReplicationLogRepository;
 import org.pstcl.estimate.repository.EstimateRepository;
+import org.pstcl.estimate.repository.WorkRepository;
 import org.pstcl.estimate.util.GlobalProperties;
 import org.pstcl.estimate.util.entity.EstimateReplicationLog;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,7 +54,7 @@ public class UtilService {
 	@Autowired
 	private EstimateReplicationLogRepository estimateReplicationLogRepository;
 
-	@Transactional
+
 	@Scheduled(fixedRate = 60 * 1000)
 	public void clientHttpRequest() {
 		List<HttpMessageConverter<?>> msgConverters = restTemplate.getMessageConverters();
@@ -69,9 +71,11 @@ public class UtilService {
 		}
 	}
 
+
+	@Transactional
 	private void getRequest(Estimate estimate) {
 		final String uri = "http://" + globalProperties.getServer() + ":" + globalProperties.getPort()
-				+ "/estimateDetails/{estimateCode}";
+		+ "/estimateDetails/{estimateCode}";
 
 		try {
 			Map<String, String> params = new HashMap<String, String>();
@@ -79,44 +83,64 @@ public class UtilService {
 			EstimateDetailsModel result = restTemplate.getForObject(uri, EstimateDetailsModel.class, params);
 			Estimate estimate2 = result.getEstimate();
 			System.out.println("FIND THIS"+estimate2.getEstimateCode());
-			System.out.println("FIND THIS"+estimate2.getEstimateCode());
-			System.out.println("FIND THIS"+estimate2.getEstimateCode());
-			System.out.println("FIND THIS"+estimate2.getEstimateCode());
-			System.out.println("FIND THIS"+estimate2.getEstimateCode());
-			
+
 			Optional<Estimate> alreadyExistingEstimate= estimateRepository.findById(estimate2.getEstimateCode());
 			if(alreadyExistingEstimate.isPresent())
 			{
-				if(estimate2.getDtUpdated().isAfter(alreadyExistingEstimate.get().getDtUpdated()))
+				if(null!=alreadyExistingEstimate.get().getDtUpdated())
 				{
-					saveOrUpdateEstimate(result, estimate2);
+					if(estimate2.getDtUpdated().isAfter(alreadyExistingEstimate.get().getDtUpdated()))
+					{
+						saveOrUpdateEstimate(result, estimate2);
 
+					}
 				}
 			}
 			else
 			{
 				saveOrUpdateEstimate(result, estimate2);
-				
+
 			}
-			
+
 		} catch (RestClientException e) {
 			replicationFailed(estimate);
 			e.printStackTrace();
 		}
 	}
 
+	@Autowired
+	private WorkRepository workRepository;
+
 	private void saveOrUpdateEstimate(EstimateDetailsModel result, Estimate estimate2) {
-		estimate2.setEstimateCostDetails(result.getEstimateCostDetails());
-		estimate2.setEstimateItemDetails(result.getEstimateItemDetails());
-		estimateRepository.save(estimate2);
-		confirmReplication(estimate2);
+		if(null!=estimate2)
+		{
+			if(null!=estimate2.getWorkMaster())
+			{
+				try {
+	
+					if(!workRepository.findById(estimate2.getWorkMaster().getWorkCode()).isPresent())
+					{
+						workRepository.save(estimate2.getWorkMaster());	
+					}
+					estimate2.setEstimateCostDetails(result.getEstimateCostDetails());
+					estimate2.setEstimateItemDetails(result.getEstimateItemDetails());
+					estimateRepository.save(estimate2);
+					confirmReplication(estimate2);
+				} catch (Exception e) {
+					System.out.println(estimate2);
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			
+		}
 	}
-	
-	
+
+
 
 	private void confirmReplication(Estimate estimate) {
 		final String uri = "http://" + globalProperties.getServer() + ":" + globalProperties.getPort()
-				+ "/confirmReplication/{estimateCode}";
+		+ "/confirmReplication/{estimateCode}";
 		Map<String, String> params = new HashMap<String, String>();
 		params.put("estimateCode", estimate.getEstimateCode());
 		EstimateDetailsModel result = restTemplate.getForObject(uri, EstimateDetailsModel.class, params);
@@ -136,7 +160,7 @@ public class UtilService {
 
 	private void replicationFailed(Estimate estimate) {
 		final String uri = "http://" + globalProperties.getServer() + ":" + globalProperties.getPort()
-				+ "/replicationFailed/{estimateCode}";
+		+ "/replicationFailed/{estimateCode}";
 		Map<String, String> params = new HashMap<String, String>();
 		params.put("estimateCode", estimate.getEstimateCode());
 		EstimateDetailsModel result = restTemplate.getForObject(uri, EstimateDetailsModel.class, params);

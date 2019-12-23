@@ -20,8 +20,11 @@ import lombok.Data;
 public class EstimateCostDetail  implements Serializable {
 	private static final long serialVersionUID = 1L;
 
-	@Column(name="cost_desc")
-	private String costDesc;
+	public EstimateCostDetail()
+	{
+		super();
+		this.id=new EstimateCostCompositeKey();
+	}
 
 	@EmbeddedId
 	@lombok.experimental.Delegate
@@ -30,16 +33,13 @@ public class EstimateCostDetail  implements Serializable {
 	
 	
 	
+	@Column(name="cost_desc")
+	private String costDesc;
+
+
+
 	@Column(name="total_amt")
 	private String totalAmt;
-
-
-
-	public EstimateCostDetail()
-	{
-		super();
-		this.id=new EstimateCostCompositeKey();
-	}
 
 	
 

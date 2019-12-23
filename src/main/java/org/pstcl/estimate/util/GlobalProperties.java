@@ -10,7 +10,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Component
-@PropertySource("classpath:external.properties")
+@PropertySource("file:external.properties")
 public class GlobalProperties {
 
 	@Autowired
