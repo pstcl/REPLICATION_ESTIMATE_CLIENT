@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="trace">
+	
+
+	<Appenders>
+	
+	<RollingFile name="clientEstimateLogger"
+			fileName="/logs/dailyTxnFileLog.log"
+			filePattern="/logs/dailyTxnFileLog-%d{yyyy-MM-dd}-%i.log">
+			<PatternLayout>
+				<pattern>[%-5level] %d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %c{1} - %msg%n
+				</pattern>
+			</PatternLayout>
+			<Policies>
+				<SizeBasedTriggeringPolicy size="10MB" />
+			</Policies>
+			<DefaultRolloverStrategy max="10" />
+		</RollingFile>
+		<RollingFile name="fileLogger"
+			fileName="/log/app-info.log"
+			filePattern="/log/app-info-%d{yyyy-MM-dd}.log">
+			<PatternLayout>
+				<pattern>[%-5level] %d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %c{1} - %msg%n
+				</pattern>
+			</PatternLayout>
+			<Policies>
+				<TimeBasedTriggeringPolicy interval="1"
+					modulate="true" />
+			</Policies>
+		</RollingFile>
+
+		<RollingFile name="hibernateSQL"
+			fileName="/log/hibernateQueries.log"
+			filePattern="/log/hibernateQueries-%d{yyyy-MM-dd}.log">
+			<PatternLayout>
+				<pattern>[%-5level] %d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %c{1} - %msg%n
+				</pattern>
+			</PatternLayout>
+			<Policies>
+				<TimeBasedTriggeringPolicy interval="1"
+					modulate="true" />
+			</Policies>
+		</RollingFile>
+
+		<RollingFile name="hibernateSQLDesc"
+			fileName="/log/hibernateQueries.log"
+			filePattern="/log/hibernateQueries-%d{yyyy-MM-dd}.log">
+			<PatternLayout>
+				<pattern>[%-5level] %d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %c{1} - %msg%n
+				</pattern>
+			</PatternLayout>
+			<Policies>
+				<TimeBasedTriggeringPolicy interval="1"
+					modulate="true" />
+			</Policies>
+		</RollingFile>
+
+		<Console name="console" target="SYSTEM_OUT">
+			<PatternLayout
+				pattern="[%-5level] %d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %c{1} - %msg%n" />
+		</Console>
+	</Appenders>
+	<Loggers>
+		<!-- Log everything in hibernate -->
+		<Logger name="org.hibernate" level="trace" additivity="false">
+			<AppenderRef ref="console" />
+			<AppenderRef ref="fileLogger" />
+		</Logger>
+
+		<!-- Log SQL statements -->
+		<Logger name="org.hibernate.SQL" level="trace"
+			additivity="false">
+			<AppenderRef ref="console" />
+			<AppenderRef ref="hibernateSQL" />
+			 
+		</Logger>
+
+		<!-- Log JDBC bind parameters -->
+		<Logger name="org.hibernate.type.descriptor.sql" level="trace"
+			additivity="false">
+			<AppenderRef ref="console" />
+			<AppenderRef ref="hibernateSQLDesc" />
+			
+		</Logger>
+
+		<!-- Log custom packages -->
+		
+		<Logger name="org.pstcl" level="error" additivity="true">
+			<appender-ref ref="clientEstimateLogger" level="error" />
+		</Logger>
+		
+		<Logger name="ClientEstimateLogger" level="error" additivity="true">
+			<appender-ref ref="clientEstimateLogger" level="error" />
+		</Logger>
+		
+
+<!-- 		<Logger name="org.pstcl" level="info" additivity="true"> -->
+<!-- 			<appender-ref ref="fileLogger" level="info" /> -->
+<!-- 		</Logger> -->
+
+		<Root level="trace" additivity="false">
+			<appender-ref ref="console" />
+		</Root>
+	</Loggers>
+</Configuration>
