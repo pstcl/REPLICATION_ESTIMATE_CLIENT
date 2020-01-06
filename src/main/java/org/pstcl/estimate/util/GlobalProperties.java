@@ -18,6 +18,16 @@ public class GlobalProperties {
 
 	@Getter
 	@Setter
+	@Value("${client.node.user}")
+	private String nodeUsername;
+
+	@Getter
+	@Setter
+	@Value("${client.node.password}")
+	private String nodePassword;
+	
+	@Getter
+	@Setter
 	@Value("${admin.username}")
 	private String adminUsername;
 

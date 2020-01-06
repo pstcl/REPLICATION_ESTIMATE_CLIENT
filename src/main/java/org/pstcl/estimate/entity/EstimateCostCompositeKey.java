@@ -3,6 +3,7 @@ package org.pstcl.estimate.entity;
 import java.io.Serializable;
 
 import javax.persistence.Embeddable;
+import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
@@ -21,7 +22,7 @@ public class EstimateCostCompositeKey  implements Serializable {
 	 */
 	private static final long serialVersionUID = 1L;
 
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.LAZY)
     @Cascade(value={org.hibernate.annotations.CascadeType.ALL})
 	@JoinColumn(name="estimate_code", referencedColumnName="estimate_code")
 	private Estimate estimate;

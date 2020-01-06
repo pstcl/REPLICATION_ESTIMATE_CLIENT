@@ -43,7 +43,7 @@ public class RestTemplateFactory implements FactoryBean<RestTemplate>, Initializ
         HttpHost host = new HttpHost("localhost", 8086, "http");
         final ClientHttpRequestFactory requestFactory = new HttpComponentsClientHttpRequestFactoryBasicAuth(host);
         restTemplate = new RestTemplate(requestFactory);
-        restTemplate.getInterceptors().add(new BasicAuthenticationInterceptor(globalProperties.getAdminUsername(), globalProperties.getAdminPassword()));
+        restTemplate.getInterceptors().add(new BasicAuthenticationInterceptor(globalProperties.getNodeUsername(), globalProperties.getNodePassword()));
     }
 
 }

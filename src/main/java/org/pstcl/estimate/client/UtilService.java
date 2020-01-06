@@ -1,25 +1,15 @@
 package org.pstcl.estimate.client;
 
-import java.io.IOException;
-import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.Set;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
 
 import org.apache.commons.collections4.CollectionUtils;
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpHeaders;
 import org.pstcl.estimate.entity.Estimate;
-import org.pstcl.estimate.entity.EstimateCostDetail;
-import org.pstcl.estimate.entity.EstimateItemDetail;
-import org.pstcl.estimate.entity.Work;
 import org.pstcl.estimate.model.EstimateDetailsModel;
 import org.pstcl.estimate.model.EstimateModel;
 import org.pstcl.estimate.repository.EstimateReplicationLogRepository;
@@ -30,9 +20,6 @@ import org.pstcl.estimate.util.entity.EstimateReplicationLog;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
-import org.springframework.http.client.support.BasicAuthenticationInterceptor;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -40,12 +27,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 @Service
 public class UtilService {
 
-	static final Logger logger = LoggerFactory.getLogger("ClientEstimateLogger");
+	static final Logger logger = LoggerFactory.getLogger("ClientEstimateLogger1");
 
 
 	@Autowired
@@ -64,7 +49,7 @@ public class UtilService {
 	private EstimateReplicationLogRepository estimateReplicationLogRepository;
 
 
-	@Scheduled(fixedRate = 60 * 1000)
+	@Scheduled(fixedRate = 5* 60 * 1000)
 	public void clientHttpRequest() {
 		try {
 
@@ -88,6 +73,11 @@ public class UtilService {
 			logger.error(e.getMessage());	
 			e.printStackTrace();
 		}
+		catch (Exception e) {
+			logger.error(e.getMessage());	
+			e.printStackTrace();
+		}
+		
 	}
 
 
@@ -115,6 +105,10 @@ public class UtilService {
 					{
 						saveOrUpdateEstimate(result, estimate2);
 
+					}
+					else
+					{
+						confirmReplication(estimate2);
 					}
 				}
 				else

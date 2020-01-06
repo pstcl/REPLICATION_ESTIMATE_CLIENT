@@ -50,11 +50,7 @@ public class Work implements Serializable {
 
 	private String empid;
 
-	//bi-directional many-to-one association to EstimateMaster
-	@JsonIgnore
-	@OneToMany(mappedBy="workMaster", fetch=FetchType.EAGER)
-	private List<Estimate> estimateMasters;
-
+	
 	@Column(name="LOCATION_CODE")
 	private String locationCode;
 

@@ -89,8 +89,8 @@
 			<appender-ref ref="clientEstimateLogger" level="error" />
 		</Logger>
 		
-		<Logger name="ClientEstimateLogger" level="error" additivity="true">
-			<appender-ref ref="clientEstimateLogger" level="error" />
+		<Logger name="ClientEstimateLogger1" level="info" additivity="true">
+			<appender-ref ref="clientEstimateLogger" level="info" />
 		</Logger>
 		
 
